@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        dns-record.kind {
+            color: blue;
+        }
+    </style>
+</head>
+<template id="dns-record-details-template">
+    <style>
+        /* :host */
+        .dns-record {
+            --mainFont: 'Courier New', Courier, monospace;
+            --normalFont: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --baseFontSize: 18px;
+            --mainColor: black;
+            --subtleColor: #bababa;
+            --okColor: rgb(227, 255, 227);
+            --warnColor: rgb(255, 243, 220);
+            --errorColor: rgb(255, 205, 205);
+            --unknownColor: rgb(246, 246, 246);
+            --tooltipColor: white;
+            --tooltipBgColor: rgb(32, 32, 32);
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            border: 1px solid var(--subtleColor);
+            border-radius: 0.5rem;
+            width: max-content;
+            max-width: 100%;
+            color: var(--mainColor);
+            background-color: var(--unknownColor);
+        }
+
+        .dns-record span {
+            padding: 0.5rem 0.75rem;
+            font-family: var(--mainFont);
+            font-size: var(--baseFontSize);
+            /* font-weight: 400; */
+        }
+
+        .dns-record .hostname {
+            border-right: 1px solid var(--subtleColor);
+            font-weight: bold;
+        }
+
+        .dns-record .domain {
+            border-right: 1px solid var(--subtleColor);
+        }
+
+        .dns-record .kind {
+            border-right: 1px solid var(--subtleColor);
+            font-weight: bold;
+        }
+
+        .dns-record .cbc {
+            cursor: pointer;
+            width: auto;
+            user-select: none;
+            padding: 0;
+        }
+
+        .dns-record .value {
+            font-weight: bold;
+        }
+
+        .clipboard-copy-icon {
+            /* padding-top: 0.2rem; */
+            width: auto;
+            height: 0.8em;
+            user-select: none;
+            cursor: pointer;
+            transform: translateY(0.15rem);
+            /* translate: translateY(0.5rem); */
+        }
+
+        .clipboard-copy-icon path {
+            fill: var(--subtleColor);
+        }
+
+        .tooltip {
+            position: relative;
+            font-weight: normal;
+        }
+
+        .tooltip:before {
+            content: attr(data-text);
+            font-family: var(--normalFont);
+            font-size: 0.8rem;
+            font-weight: normal;
+            position: absolute;
+            top: 100%;
+            left: 8px;
+            transform: translateY(8px);
+            width: auto;
+            padding: 0.5rem;
+            border-radius: 0.4rem;
+            background: var(--tooltipBgColor);
+            color: var(--tooltipColor);
+            text-align: center;
+            display: none;
+        }
+
+        .tooltip:after {
+            content: "";
+            position: absolute;
+            left: 1.5rem;
+            margin-left: -5px;
+            top: 100%;
+            transform: translateY(-10px);
+            border: 10px solid var(--tooltipBgColor);
+            border-color: transparent transparent var(--tooltipBgColor) transparent;
+            display: none;
+        }
+
+        .tooltip:hover:before,
+        .tooltip:hover:after {
+            display: block;
+        }
+    </style>
+    <div class="dns-record">
+        <span class="hostname tooltip" data-text="Click to copy to clipboard">
+            <slot name="hostname"></slot>
+            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                data-view-component="true" class="clipboard-copy-icon">
+                <path
+                    d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z">
+                </path>
+                <path
+                    d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z">
+                </path>
+            </svg>
+        </span>
+        <span class="domain">
+            <slot name="domain"></slot>
+        </span>
+        <span class="kind">
+            <slot name="kind"></slot>
+        </span>
+        <span class="value tooltip left" data-text="Click to copy to clipboard">
+            <slot name="value"></slot>
+            <span class="cbc">
+                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                    data-view-component="true" class="clipboard-copy-icon">
+                    <path
+                        d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z">
+                    </path>
+                    <path
+                        d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z">
+                    </path>
+                </svg>
+            </span>
+        </span>
+    </div>
+</template>
+
+<body>
+    <h1>DNS Custom component</h1>
+    <dns-record data-status="ok" data-nocopy>
+        <span slot="hostname">_dmarc</span>
+        <span slot="domain">example.com</span>
+        <span slot="kind">TXT</span>
+        <span slot="value">v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s;</span>
+    </dns-record>
+    <!-- <dns-record data-status="ok" data-nocopy>
+        <span class="hostname">_dmarc</span>
+        <span class="domain">example.com</span>
+        <span class="kind">TXT</span>
+        <span class="value">"v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s;"</span>
+    </dns-record> -->
+</body>
+<script>
+    class DNSRecordElement extends HTMLElement {
+        static observedAttributes = ["data-status", "data-nocopy"];
+
+        constructor() {
+            super();
+            const template = document.getElementById("dns-record-details-template").content;
+            const shadowRoot = this.attachShadow({ mode: "open" });
+            shadowRoot.appendChild(template.cloneNode(true));
+        }
+        // Element functionality written in here
+
+        connectedCallback() {
+            console.log("Custom element added to page.");
+            console.log("this", this);
+            const status = this.getAttribute("data-status");
+            console.log("status", status);
+            let nocopy = this.getAttribute("data-nocopy");
+            console.log("nocopy", nocopy);
+            // zkontroluj, jestli jsou vsechny sloty vyplnene (muzou bejt ale prazdny)
+            // jinak napis do console error
+
+            if (status) {
+                console.log("data-status", this.getAttribute("data-status"));
+            }
+
+            const value = this.querySelector("[slot='value'").innerHTML;
+            console.log("valueraw", value);
+
+            const valueEl = this.shadowRoot.querySelector(".value");
+            console.log('valeuEl', valueEl);
+            valueEl.addEventListener("click", () => {
+                console.log("value clicked");
+                // Copy the text inside the text field
+                // const value = valueEl.textContent;
+                console.log("value", value);
+                navigator.clipboard.writeText(value).then(function () {
+                    alert("Copied the text: " + value);
+                }, function (err) {
+                    console.error("Async: Could not copy text: ", err);
+                })
+
+                // Alert the copied text
+                // alert("Copied the text: " + value);
+            });
+            // take zmenit cursor na pointer, pokud jde zkopirovat. (nebo jinej?)
+            // dat kurzoru tooltip, ze kliknutim zkopirujte.
+
+            // this.querySelector("value").addEventListener("click", () => {
+            // console.log("clicked");
+            // });
+            // const chi = this.children
+            // console.log('chi', chi.length, chi);
+
+            // // const shadow = this.attachShadow({ mode: "closed" });
+
+            // // const wrapper = document.createElement("div");
+            // // wrapper.setAttribute("class", "dns-record");
+
+
+            // const style = document.createElement("style");
+            // console.log("style connected", style.isConnected);
+
+            // style.textContent = `
+            //     .hostname {
+            //         color: red;
+            //     }
+            //     .kind {
+            //         color: orange;
+            //     }
+            //     `;
+            // this.appendChild(style);
+
+            // shadow.appendChild(style);
+            // console.log("style connected after", style.isConnected);
+
+            // shadow.appendChild(wrapper);
+            // wrapper.innerText = "Hello World";
+        }
+
+        disconnectedCallback() {
+            console.log("Custom element removed from page.");
+        }
+
+        adoptedCallback() {
+            console.log("Custom element moved to new page.");
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+            console.log(`Attribute ${name} has changed.`);
+        }
+    }
+
+    customElements.define("dns-record", DNSRecordElement);
+</script>
+
+</html>
